@@ -5,3 +5,7 @@ BotBoard.iml
 META-INF/
 Rested HTTP Test.request
 src/META-INF/
+
+.classpath
+.project
+
