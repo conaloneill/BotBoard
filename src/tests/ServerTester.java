@@ -27,10 +27,10 @@ public class ServerTester{
         		new Post(8, "new thread first post", "new thread", "author", 0))
         		).write(System.out);
         
-//    	System.out.println("\n\nPOST request to root URL to create new post in thread 1");
+    	System.out.println("\n\nPOST request to root URL to create new post in thread 1");
     	
-//        new ClientResource("http://localhost:8080").post(gson.toJson(
-//        		new server.Post(8, "new thread first post", "new thread", "author", 1))
-//        		).write(System.out);
+        new ClientResource("http://localhost:9000").post(gson.toJson(
+        		new server.Post(8, "Test4", "Test4", "author", 1))
+        		).write(System.out);
     }
 }
