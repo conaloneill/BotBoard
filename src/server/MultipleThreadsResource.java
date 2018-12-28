@@ -1,14 +1,12 @@
 package server;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.restlet.resource.Get;
-import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*  (extending ServerResource allows for @Get, @Post annotations which execute based on
  *  whether the class receives a GET, POST request respectively)
@@ -18,22 +16,22 @@ import com.google.gson.Gson;
  */
 public class MultipleThreadsResource extends ServerResource{
 	
-	Gson gson = new Gson();
+	ObjectMapper objectMapper = new ObjectMapper();
 	
 	// For GET requests, returns a json response of a list of threads(not including their posts)
     @Get("json")
-    public String getThreads() {
+    public List<MessageThreadInfo> getThreads() {
         int lastThreadIndex = Server.threadList.size()-1;
         
-    	List<MessageThread.MessageThreadInfo> threadList = new LinkedList<MessageThread.MessageThreadInfo>();
+    	List<MessageThreadInfo> threadList = new LinkedList<MessageThreadInfo>();
     	
     	//Loop through each thread extracting its id and name
     	for(int i = 0; i <= lastThreadIndex; i++) {	
-    		MessageThread.MessageThreadInfo threadEntry = Server.threadList.get(i).info;
+    		MessageThreadInfo threadEntry = Server.threadList.get(i).info;
     		threadList.add(i, threadEntry);
     	}
     	
-    	return gson.toJson(threadList);
+    	return threadList;
     }
     
     // For POST requests, takes a json input of a Post, 
@@ -41,9 +39,9 @@ public class MultipleThreadsResource extends ServerResource{
     // and sets the post as it's first entry.
     // Returns a list of threads as in a GET request.
     @org.restlet.resource.Post("json:json")
-    public String addPost(String input) throws ResourceException, IOException{
+    public List<MessageThreadInfo> addPost(String input) throws Exception{
     	
-    	Post newPost = gson.fromJson(input, Post.class);
+    	Post newPost = objectMapper.readValue(input, Post.class);
     	
     	//If threadId is 0, create a new thread
     	if(newPost.threadId == 0) {
@@ -53,15 +51,15 @@ public class MultipleThreadsResource extends ServerResource{
     		Server.threadList.get(newThreadIndex).posts.add(0, newPost);
     	
     		// Return a thread list as in the GET case
-    		List<MessageThread.MessageThreadInfo> threadList = new LinkedList<MessageThread.MessageThreadInfo>();
+    		List<MessageThreadInfo> threadList = new LinkedList<MessageThreadInfo>();
         	for(int i = 0; i <= newThreadIndex; i++) {	
-        		MessageThread.MessageThreadInfo threadEntry = Server.threadList.get(i).info;
+        		MessageThreadInfo threadEntry = Server.threadList.get(i).info;
         		threadList.add(i, threadEntry);
         	}
-    		return gson.toJson(threadList);
+    		return threadList;
     	}
     	
-    	//If threadId matches an existing thread, ad the post to the end of that thread
+    	//If threadId matches an existing thread, ad the post to the end of that thread, return null.
     	//(Note: this is a copy paste of the method from ThreadResource. While redundant,
     	//the restlet api makes it very difficult to call a http method from within a http method.
     	//Possible future solutions might involve: 1. Router redirection 2. Running in a servlet
@@ -76,7 +74,7 @@ public class MultipleThreadsResource extends ServerResource{
         	
         	Server.threadList.get(newPost.threadId-1).posts.add(newPostIndex, newPost);
         	
-        	return gson.toJson(Server.threadList.get(newPost.threadId-1).posts);
+        	return null;
         	
     	}
     	else {

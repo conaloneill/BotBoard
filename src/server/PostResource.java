@@ -1,9 +1,14 @@
 package server;
 
+import java.io.IOException;
+
 import org.restlet.resource.Get;
+import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*  (extending ServerResource allows for @Get, @Post annotations which execute based on
  *  whether the class receives a GET, POST request respectively)
@@ -15,7 +20,7 @@ public class PostResource extends ServerResource{
     int postId;
     int threadId;
     
-    Gson gson = new Gson();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     // Extract "postid", and "threadid" from the URL pattern
     // "localhost:900/{threadid}/{postid}"
@@ -27,7 +32,24 @@ public class PostResource extends ServerResource{
 
     // For GET requests, returns a json Post with the postid and threadid requested
     @Get("json")
-    public String getPost() {
-    	return gson.toJson(Server.threadList.get(threadId-1).posts.get(postId-1));
+    public Post getPost() {
+    	return Server.threadList.get(threadId-1).posts.get(postId-1);
+    }
+    
+    // For PUT requests, takes a json Post and updates the Post at the Url pattern
+    @Put("json")
+    public Post updatePost(String input) throws JsonParseException, JsonMappingException, IOException {
+    	
+    	Post newPost = objectMapper.readValue(input, Post.class);
+    	
+    	//If the post's id or thread id don't match the URL pattern
+    	if(newPost.id != postId || newPost.threadId != threadId)
+    		return null;
+    	
+    	//Update post and return it
+    	else {
+    		Server.threadList.get(threadId-1).posts.set(postId-1, newPost);
+    		return newPost;
+    	}
     }
 }

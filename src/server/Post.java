@@ -21,4 +21,6 @@ public class Post {
 		this.threadId = threadId;
 	}
 	
+	//Dummy constructor required for Jackson library
+	public Post(){}
 }

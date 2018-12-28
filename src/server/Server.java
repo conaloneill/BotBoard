@@ -15,7 +15,7 @@ public class Server extends Application{
 	
 	// The "core" data structure of the BotBoard application
 	// which stores each thread with all their posts.
-	static List<MessageThread> threadList;
+	static public List<MessageThread> threadList;
 	
 	public static void main(String [] args) throws Exception{	
 		//Instantiate aforementioned data structure
