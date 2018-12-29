@@ -1,7 +1,6 @@
 package tests;
 
 import org.restlet.resource.ClientResource;
-
 import server.Post;
 
 public class ServerTester{
@@ -35,5 +34,8 @@ public class ServerTester{
         new ClientResource("http://localhost:9000/1/2").put(
         		new server.Post(2, "Put5", "Put5", "author", 1)
         		).write(System.out);
+        
     }
+    
+    
 }

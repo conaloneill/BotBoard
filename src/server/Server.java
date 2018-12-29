@@ -1,5 +1,7 @@
 package server;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,7 +9,9 @@ import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.data.Protocol;
+import org.restlet.ext.swagger.Swagger2SpecificationRestlet;
 import org.restlet.routing.Router;
+import org.restlet.service.CorsService;
 
 // Contains main method to be run on the server.
 // Sets up URL routes to different resources.
@@ -45,6 +49,16 @@ public class Server extends Application{
 		//Create a new application
 		Application application = new Server();
 		
+		//Enable CORS for swagger
+	    CorsService corsService = new CorsService();         
+	    corsService.setAllowedOrigins(new HashSet(Arrays.asList("*")));
+	    corsService.setAllowedCredentials(true);
+	    application.getServices().add(corsService);
+		
+	    //Set application information
+	    application.setDescription("Todo: Description");
+	    application.setName("BotBoard");
+	    
         // Attach the application to local host and start it
         component.getDefaultHost().attachDefault(application);
         component.start();
@@ -56,12 +70,18 @@ public class Server extends Application{
     public Restlet createInboundRoot() {
         // Create a router
         Router router = new Router(getContext());
-
+        
+        //Create and attach a Swagger 2.0 Restlet to generate API description 
+		 Swagger2SpecificationRestlet swagger2SpecificationRestlet = new Swagger2SpecificationRestlet(this); 
+		 swagger2SpecificationRestlet.setBasePath("http://localhost:9000/");
+		 
+		 swagger2SpecificationRestlet.attach(router);
+        
         // Attach the resources to the router
         router.attach("/", MultipleThreadsResource.class);
         router.attach("/{threadid}", ThreadResource.class);
         router.attach("/{threadid}/{postid}", PostResource.class);
-
+        
         // Return the root router
         return router;
     }

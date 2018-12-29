@@ -9,6 +9,8 @@ import org.restlet.resource.ServerResource;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
 
 /*  (extending ServerResource allows for @Get, @Post annotations which execute based on
  *  whether the class receives a GET, POST request respectively)
@@ -31,13 +33,17 @@ public class PostResource extends ServerResource{
     }
 
     // For GET requests, returns a json Post with the postid and threadid requested
-    @Get("json")
+	@ApiOperation(value = "Get the post at this Url", tags = "API")
+	@ApiResponse(code = 200, message = "Success_OK.")
+    @Get()
     public Post getPost() {
     	return Server.threadList.get(threadId-1).posts.get(postId-1);
     }
     
     // For PUT requests, takes a json Post and updates the Post at the Url pattern
-    @Put("json")
+	@ApiOperation(value = "Update this post if the input post Id matches. \n (Takes a json Post object)", tags = "API")
+	@ApiResponse(code = 200, message = "Success_OK.")
+    @Put()
     public Post updatePost(String input) throws JsonParseException, JsonMappingException, IOException {
     	
     	Post newPost = objectMapper.readValue(input, Post.class);

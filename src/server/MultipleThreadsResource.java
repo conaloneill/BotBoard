@@ -1,5 +1,4 @@
 package server;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,6 +6,8 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
 
 /*  (extending ServerResource allows for @Get, @Post annotations which execute based on
  *  whether the class receives a GET, POST request respectively)
@@ -19,7 +20,9 @@ public class MultipleThreadsResource extends ServerResource{
 	ObjectMapper objectMapper = new ObjectMapper();
 	
 	// For GET requests, returns a json response of a list of threads(not including their posts)
-    @Get("json")
+	@ApiOperation(value = "Get a list of the message threads on the board in Json form.", tags = "API")
+	@ApiResponse(code = 200, message = "Success_OK.")
+    @Get()
     public List<MessageThreadInfo> getThreads() {
         int lastThreadIndex = Server.threadList.size()-1;
         
@@ -38,7 +41,9 @@ public class MultipleThreadsResource extends ServerResource{
     // If the threadId is 0, it creates a new thread with the title of the post,
     // and sets the post as it's first entry.
     // Returns a list of threads as in a GET request.
-    @org.restlet.resource.Post("json:json")
+	@ApiOperation(value = "Create a new thread(if post thread Id is 0) or add a post to an existing thread.\n(takes a json Post object)", tags = "API")
+	@ApiResponse(code = 200, message = "Success_OK")
+    @org.restlet.resource.Post()
     public List<MessageThreadInfo> addPost(String input) throws Exception{
     	
     	Post newPost = objectMapper.readValue(input, Post.class);

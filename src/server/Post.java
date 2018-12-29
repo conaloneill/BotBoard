@@ -2,6 +2,9 @@ package server;
 
 import java.util.Date;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Describes a Post object.")
 public class Post {
 	
 	public int id;
@@ -23,4 +26,21 @@ public class Post {
 	
 	//Dummy constructor required for Jackson library
 	public Post(){}
+	
+	//Getter methods for Swagger introspection
+	public int getId() {
+		return id;
+	}
+	public String getBody() {
+		return body;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public Date getDate() {
+		return date;
+	}
 }
