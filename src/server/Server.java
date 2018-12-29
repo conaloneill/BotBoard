@@ -85,4 +85,21 @@ public class Server extends Application{
         // Return the root router
         return router;
     }
+	
+	// Find the index of a Thread in the Thread List by it's id
+	public static int findIndexById(int id) {
+		int i = 0;
+		
+		for(MessageThread t : threadList){
+			if(t.info.getId() == id)
+				break;
+			i++;
+		}
+		
+		//If there is no thread with such an id, return -1
+		if(i == threadList.size() && threadList.get(i-1).info.getId() != id)
+			return -1;
+		
+		return i;
+	}
 }

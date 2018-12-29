@@ -35,6 +35,29 @@ public class ServerTester{
         		new server.Post(2, "Put5", "Put5", "author", 1)
         		).write(System.out);
         
+    	System.out.println("\n\nDelete request to /3/2");
+    	
+        new ClientResource("http://localhost:9000/3/2").delete().write(System.out);
+        
+    	System.out.println("\n\nDelete request to /4/1");
+    	
+        new ClientResource("http://localhost:9000/4/1").delete().write(System.out);
+        
+    	System.out.println("\n\nPOST request to thread id 3");
+    	
+    	Post testPost2 = new Post(0, "new " +
+		        "post body", "new post title", "author", 2);
+    	
+    	new ClientResource("http://localhost:9000/3").post(testPost2).write(System.out);
+    	
+    	System.out.println("\n\nPOST request to root URL to create new thread");
+        
+        new ClientResource("http://localhost:9000").post(
+        		new Post(8, "new thread first post", "new thread", "author", 0)
+        		).write(System.out);
+        
+        new ClientResource("http://localhost:9000/4").delete().write(System.out);
+        
     }
     
     

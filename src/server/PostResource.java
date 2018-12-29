@@ -2,6 +2,7 @@ package server;
 
 import java.io.IOException;
 
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
@@ -35,27 +36,87 @@ public class PostResource extends ServerResource{
     // For GET requests, returns a json Post with the postid and threadid requested
 	@ApiOperation(value = "Get the post at this Url", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-    @Get()
+    @Get
     public Post getPost() {
-    	return Server.threadList.get(threadId-1).posts.get(postId-1);
+		int threadIndex = Server.findIndexById(threadId);
+		
+		//Return if no such thread exists
+		if(threadIndex < 0)
+			return null;
+		
+		MessageThread thread = Server.threadList.get(threadIndex);
+		
+		int postIndex = thread.findIndexById(postId);
+		
+		//Return if no such post exists
+		if(postIndex < 0)
+			return null;
+		
+		return thread.posts.get(postIndex);
     }
     
     // For PUT requests, takes a json Post and updates the Post at the Url pattern
 	@ApiOperation(value = "Update this post if the input post Id matches. \n (Takes a json Post object)", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-    @Put()
+    @Put
     public Post updatePost(String input) throws JsonParseException, JsonMappingException, IOException {
     	
     	Post newPost = objectMapper.readValue(input, Post.class);
     	
-    	//If the post's id or thread id don't match the URL pattern
+    	// Return if the post's id or thread id don't match the URL pattern
     	if(newPost.id != postId || newPost.threadId != threadId)
     		return null;
     	
-    	//Update post and return it
+    	// Update post and return it
     	else {
-    		Server.threadList.get(threadId-1).posts.set(postId-1, newPost);
+    		int threadIndex = Server.findIndexById(threadId);
+    		
+    		//Return if no such thread exists
+    		if(threadIndex < 0)
+    			return null;
+    		
+    		MessageThread thread = Server.threadList.get(threadIndex);
+    		
+    		int postIndex = thread.findIndexById(postId);
+    		
+    		//Return if no such post exists
+    		if(postIndex < 0)
+    			return null;
+    		
+    		thread.posts.set(postIndex, newPost);
+
     		return newPost;
     	}
     }
+	
+	// For DELETE requests, removes the post at this url from the thread unless it's the first post
+	@ApiOperation(value = "Delete this post unless it is the first post in the thread.", tags = "API")
+	@ApiResponse(code = 200, message = "Success_OK.")
+	@Delete
+	public String deletePost() {		
+		if(postId > 1) {
+    		int threadIndex = Server.findIndexById(threadId);
+    		
+    		//Return if no such thread exists
+    		if(threadIndex < 0)
+    			return null;
+    		
+    		MessageThread thread = Server.threadList.get(threadIndex);
+    		
+    		int postIndex = thread.findIndexById(postId);
+    		
+    		//Return if no such post exists
+    		if(postIndex < 0)
+    			return null;
+    		
+    		thread.posts.remove(postIndex);
+    		
+			return "Succesfully deleted";
+		}
+		else if(postId == 1)
+			return "Cannot delete first post, must delete whole thread";
+		else
+			return "Error: No post exists at this address";
+	}
+	
 }
