@@ -51,7 +51,12 @@ public class MultipleThreadsResource extends ServerResource{
     	//If threadId is 0, create a new thread
     	if(newPost.threadId == 0) {
     		int newThreadIndex = Server.threadList.size();
-    		int newThreadId = Server.threadList.get(newThreadIndex-1).info.getId() + 1;
+    		int newThreadId;
+    		
+    		if(newThreadIndex > 0)
+    			newThreadId = Server.threadList.get(newThreadIndex-1).info.getId() + 1;
+    		else
+    			newThreadId = 1;
     		
     		Server.threadList.add(new MessageThread(newThreadId, newPost.title));
     		newPost.id = 1;

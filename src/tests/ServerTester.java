@@ -1,11 +1,51 @@
 package tests;
 
+import org.junit.Test;
 import org.restlet.resource.ClientResource;
+
 import server.Post;
 
 public class ServerTester{
-    public static void main(String[] args) throws Exception {
-    	
+	
+	@Test
+    public void apiTest() throws Exception{
+	//public static void main(String [] args) throws Exception{
+		
+		// Fill board with test data
+		
+		new ClientResource("http://localhost:9000").post(
+        		new Post(1, "Body 1", "Thread1(.Post 1)", "author", 0)
+        		).write(System.out);
+		new ClientResource("http://localhost:9000").post(
+        		new Post(1, "Body 1", "Thread2(.Post 1)", "author", 0)
+        		).write(System.out);
+		new ClientResource("http://localhost:9000").post(
+        		new Post(1, "Body 1", "Thread2(.Post 1)", "author", 0)
+        		).write(System.out);
+		
+		new ClientResource("http://localhost:9000/1").post(
+        		new Post(2, "Body 2", "Thread1.Post 2", "author", 1)
+        		).write(System.out);
+		new ClientResource("http://localhost:9000/1").post(
+        		new Post(3, "Body 3", "Thread1.Post 3", "author", 1)
+        		).write(System.out);
+		
+		new ClientResource("http://localhost:9000/1").post(
+        		new Post(2, "Body 2", "Thread2.Post 2", "author", 2)
+        		).write(System.out);
+		new ClientResource("http://localhost:9000/1").post(
+        		new Post(3, "Body 3", "Thread2.Post 3", "author", 2)
+        		).write(System.out);
+		
+		new ClientResource("http://localhost:9000/1").post(
+        		new Post(2, "Body 2", "Thread3.Post 2", "author", 3)
+        		).write(System.out);
+		new ClientResource("http://localhost:9000/1").post(
+        		new Post(3, "Body 3", "Thread3.Post 3", "author", 3)
+        		).write(System.out);
+		
+    	// Run a series tests on the data
+		
     	System.out.println("GET request to thread id 2");
     	
     	new ClientResource("http://localhost:9000/2").get().write(System.out);

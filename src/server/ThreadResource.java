@@ -60,7 +60,12 @@ public class ThreadResource extends ServerResource {
 			return null;
     	
     	int newPostIndex = Server.threadList.get(threadIndex).posts.size();
-    	int newPostId = Server.threadList.get(threadIndex).posts.get(newPostIndex-1).id + 1;
+    	int newPostId;
+    	
+    	if(newPostIndex > 0)
+    		newPostId = Server.threadList.get(threadIndex).posts.get(newPostIndex-1).id + 1;
+    	else
+    		newPostId = 1;
     	
     	newPost.id = newPostId;
     	newPost.threadId = threadId;
