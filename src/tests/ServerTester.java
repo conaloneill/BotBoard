@@ -30,17 +30,17 @@ public class ServerTester{
         		new Post(3, "Body 3", "Thread1.Post 3", "author", 1)
         		).write(System.out);
 		
-		new ClientResource("http://localhost:9000/1").post(
+		new ClientResource("http://localhost:9000/2").post(
         		new Post(2, "Body 2", "Thread2.Post 2", "author", 2)
         		).write(System.out);
-		new ClientResource("http://localhost:9000/1").post(
+		new ClientResource("http://localhost:9000/2").post(
         		new Post(3, "Body 3", "Thread2.Post 3", "author", 2)
         		).write(System.out);
 		
-		new ClientResource("http://localhost:9000/1").post(
+		new ClientResource("http://localhost:9000/3").post(
         		new Post(2, "Body 2", "Thread3.Post 2", "author", 3)
         		).write(System.out);
-		new ClientResource("http://localhost:9000/1").post(
+		new ClientResource("http://localhost:9000/3").post(
         		new Post(3, "Body 3", "Thread3.Post 3", "author", 3)
         		).write(System.out);
 		
