@@ -2,13 +2,14 @@ package com.botboard.messageboard.controllers;
 
 import com.botboard.messageboard.MessageBoardApplication;
 import com.botboard.messageboard.models.Post;
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.shared.Application;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.models.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.client.discovery.*;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -98,11 +99,16 @@ public class ThreadController {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	@Autowired
+	private DiscoveryClient discoveryClient;
+	
 	@Bean
 	@LoadBalanced
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
+	
+	
 	
 	private Post getBotResult(Post newPost) {
 		String body = newPost.body;
@@ -111,12 +117,36 @@ public class ThreadController {
 		Matcher m = p.matcher(body);
 		
 		if (m.find()) {
+			
 			System.out.println("got here found");
 			String serviceName = m.group(1);
-			String url = "http://" + serviceName;
-			String response = restTemplate.getForObject(url, String.class);
-			return new Post(newPost.id+1, response, "Bitcoin Price", serviceName,
-					newPost.threadId+1);
+			
+//
+//			registry = EurekaServerContextHolder.getInstance().getServerContext().getRegistry();
+//			Applications applications = registry.getApplications();
+//
+//			List<String> bots = new LinkedList<>();
+//
+//			applications.getRegisteredApplications().forEach((registeredApplication) -> {
+//				registeredApplication.getInstances().forEach((instance) -> {
+//					bots.add(instance.getAppName());
+//				});
+//			});
+			
+			List<String> list = discoveryClient.getServices();
+			
+			for (String appName : list
+			     ) {
+				if( appName.equals(serviceName)) {
+					String url = "http://" + serviceName;
+					String response = restTemplate.getForObject(url, String.class);
+					return new Post(newPost.id + 1, response, "Bot Result", serviceName,
+							newPost.threadId + 1);
+				}
+			}
+			
+			
+			return newPost;
 		}
 		
 		return null;

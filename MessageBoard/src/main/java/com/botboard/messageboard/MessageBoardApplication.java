@@ -3,6 +3,7 @@ package com.botboard.messageboard;
 import com.botboard.messageboard.models.MessageThread;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 import java.util.LinkedList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableEurekaClient
+@EnableDiscoveryClient
 public class MessageBoardApplication {
 	
 	// The "core" data structure of the BotBoard application

@@ -28,4 +28,3 @@ management:
 logging:
   level:
     com.botboard: DEBUG
-
