@@ -25,7 +25,7 @@ public class ThreadController {
 	// For a GET request, returns a json list of the Posts in the thread
 	@ApiOperation(value = "Get a list of the posts in the thread in Json form.", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/{threadid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/threadid-{threadid}", method = RequestMethod.GET)
 	public ResponseEntity<List<Post>> getPosts(@PathVariable(value = "threadid") int threadId) {
 		int threadIndex = MessageBoardApplication.findIndexById(threadId);
 		
@@ -41,7 +41,7 @@ public class ThreadController {
 	// then adds it to the end of the thread, with appropriate postId
 	@ApiOperation(value = "Creates a new post in the thread.\n(takes a json Post object)", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/{threadid}", method = RequestMethod.POST)
+	@RequestMapping(value = "/threadid-{threadid}", method = RequestMethod.POST)
 	public ResponseEntity<List<Post>> addPost(@PathVariable(value = "threadid") int threadId,
 	                                          @RequestBody Post newPost) {
 		
@@ -78,7 +78,7 @@ public class ThreadController {
 	// For DELETE requests, removes the thread at this url
 	@ApiOperation(value = "Delete this thread", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/{threadid}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/threadid-{threadid}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteThread(@PathVariable(value = "threadid") int threadId) {
 		int threadIndex = MessageBoardApplication.findIndexById(threadId);
 		
