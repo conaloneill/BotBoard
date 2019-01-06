@@ -22,7 +22,7 @@ public class MultipleThreadController {
 	// For GET requests, returns a json response of a list of threads(not including their posts)
 	@ApiOperation(value = "Get a list of the message threads on the board in Json form.", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/board", method = RequestMethod.GET)
 	public List<MessageThreadInfo> getThreads() {
 		int lastThreadIndex = MessageBoardApplication.threadList.size() - 1;
 		
@@ -43,7 +43,7 @@ public class MultipleThreadController {
 	// Returns a list of threads as in a GET request.
 	@ApiOperation(value = "Create a new thread(if post thread Id is 0) or add a post to an existing thread.\n(takes a json Post object)", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK")
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/board", method = RequestMethod.POST)
 	public ResponseEntity<List<MessageThreadInfo>> addPost(@RequestBody Post newPost) {
 		
 		//If threadId is 0, create a new thread

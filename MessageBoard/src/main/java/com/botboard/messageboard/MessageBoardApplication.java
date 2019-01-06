@@ -10,8 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SpringBootApplication
-@EnableEurekaClient
-@EnableDiscoveryClient
 public class MessageBoardApplication {
 	
 	// The "core" data structure of the BotBoard application

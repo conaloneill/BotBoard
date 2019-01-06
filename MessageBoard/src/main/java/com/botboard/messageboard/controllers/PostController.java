@@ -16,7 +16,7 @@ public class PostController {
 	// For GET requests, returns a json Post with the postid and threadid requested
 	@ApiOperation(value = "Get the post at this Url", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/{threadid}/{postid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/board/{threadid}/{postid}", method = RequestMethod.GET)
 	public ResponseEntity<Post> getPost(@PathVariable(value = "threadid") int threadId,
 	                                    @PathVariable(value =
 			                                    "postid") int postId) {
@@ -40,7 +40,7 @@ public class PostController {
 	// For PUT requests, takes a json Post and updates the Post at the Url pattern
 	@ApiOperation(value = "Update this post if the input post Id matches. \n (Takes a json Post object)", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/{threadid}/{postid}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/board/{threadid}/{postid}", method = RequestMethod.PUT)
 	public ResponseEntity<Post> updatePost(@PathVariable(value = "threadid") int threadId,
 	                                       @PathVariable(value =
 			                                       "postid") int postId,
@@ -77,7 +77,7 @@ public class PostController {
 	// For DELETE requests, removes the post at this url from the thread unless it's the first post
 	@ApiOperation(value = "Delete this post unless it is the first post in the thread.", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/{threadid}/{postid}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/board/{threadid}/{postid}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deletePost(@PathVariable(value = "threadid") int threadId,
 	                                         @PathVariable(value =
 			                                         "postid") int postId) {
