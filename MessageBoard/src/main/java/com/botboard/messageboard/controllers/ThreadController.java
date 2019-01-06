@@ -64,10 +64,11 @@ public class ThreadController {
 		
 		MessageBoardApplication.threadList.get(threadIndex).posts.add(newPostIndex, newPost);
 		
-		if (checkForBot(newPost)) {
-			System.out.println("got here check");
-			MessageBoardApplication.threadList.get(threadIndex).posts.add(newPostIndex + 1,
-					getBotResult(newPost));
+		if (checkForBotCallInBody(newPost)) {
+			if (checkIfBotisActive(newPost)) {
+				MessageBoardApplication.threadList.get(threadIndex).posts.add(newPostIndex + 1,
+						getBotResult(newPost));
+			}
 		}
 		
 		return new ResponseEntity(MessageBoardApplication.threadList.get(threadIndex).posts,
@@ -117,21 +118,7 @@ public class ThreadController {
 		Matcher m = p.matcher(body);
 		
 		if (m.find()) {
-			
-			System.out.println("got here found");
 			String serviceName = m.group(1);
-			
-//
-//			registry = EurekaServerContextHolder.getInstance().getServerContext().getRegistry();
-//			Applications applications = registry.getApplications();
-//
-//			List<String> bots = new LinkedList<>();
-//
-//			applications.getRegisteredApplications().forEach((registeredApplication) -> {
-//				registeredApplication.getInstances().forEach((instance) -> {
-//					bots.add(instance.getAppName());
-//				});
-//			});
 			
 			List<String> list = discoveryClient.getServices();
 			
@@ -152,7 +139,34 @@ public class ThreadController {
 		return null;
 	}
 	
-	private Boolean checkForBot(Post newPost) {
+	
+	private boolean checkIfBotisActive(Post newPost) {
+		
+		String body = newPost.body;
+		
+		Pattern p = Pattern.compile("@(\\w+)");
+		Matcher m = p.matcher(body);
+		
+		if (m.find()) {
+			String serviceName = m.group(1);
+			
+			List<String> list = discoveryClient.getServices();
+			
+			for (String appName : list
+			) {
+				if(appName.equals(serviceName)) {
+					return true;
+				}
+			}
+			
+			
+			return false;
+		}
+		
+		return false;
+	}
+	
+	private Boolean checkForBotCallInBody(Post newPost) {
 		String body = newPost.body;
 		
 		Pattern p = Pattern.compile("@(\\w+)");
