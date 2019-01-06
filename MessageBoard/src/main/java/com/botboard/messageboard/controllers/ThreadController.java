@@ -2,8 +2,6 @@ package com.botboard.messageboard.controllers;
 
 import com.botboard.messageboard.MessageBoardApplication;
 import com.botboard.messageboard.models.Post;
-import com.netflix.appinfo.InstanceInfo;
-import com.netflix.discovery.shared.Application;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ public class ThreadController {
 	// For a GET request, returns a json list of the Posts in the thread
 	@ApiOperation(value = "Get a list of the posts in the thread in Json form.", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/threadid-{threadid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{threadid}", method = RequestMethod.GET)
 	public ResponseEntity<List<Post>> getPosts(@PathVariable(value = "threadid") int threadId) {
 		int threadIndex = MessageBoardApplication.findIndexById(threadId);
 		
@@ -41,10 +39,12 @@ public class ThreadController {
 	// then adds it to the end of the thread, with appropriate postId
 	@ApiOperation(value = "Creates a new post in the thread.\n(takes a json Post object)", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/threadid-{threadid}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{threadid}", method = RequestMethod.POST)
 	public ResponseEntity<List<Post>> addPost(@PathVariable(value = "threadid") int threadId,
-	                                          @RequestBody Post newPost) {
+	                                          @RequestBody Post httpPost) {
 		
+		Post newPost = new Post(httpPost.id, httpPost.body,httpPost.title,httpPost.author,
+				httpPost.threadId);
 		int threadIndex = MessageBoardApplication.findIndexById(threadId);
 		
 		//Return if no such thread exists
@@ -78,7 +78,7 @@ public class ThreadController {
 	// For DELETE requests, removes the thread at this url
 	@ApiOperation(value = "Delete this thread", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/threadid-{threadid}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "{threadid}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteThread(@PathVariable(value = "threadid") int threadId) {
 		int threadIndex = MessageBoardApplication.findIndexById(threadId);
 		

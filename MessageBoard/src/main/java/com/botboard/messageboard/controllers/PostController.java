@@ -16,7 +16,7 @@ public class PostController {
 	// For GET requests, returns a json Post with the postid and threadid requested
 	@ApiOperation(value = "Get the post at this Url", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/threadid-{threadid}/postid-{postid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{threadid}/{postid}", method = RequestMethod.GET)
 	public ResponseEntity<Post> getPost(@PathVariable(value = "threadid") int threadId,
 	                                    @PathVariable(value =
 			                                    "postid") int postId) {
@@ -40,12 +40,15 @@ public class PostController {
 	// For PUT requests, takes a json Post and updates the Post at the Url pattern
 	@ApiOperation(value = "Update this post if the input post Id matches. \n (Takes a json Post object)", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/threadid-{threadid}/postid-{postid}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{threadid}/{postid}", method = RequestMethod.PUT)
 	public ResponseEntity<Post> updatePost(@PathVariable(value = "threadid") int threadId,
 	                                       @PathVariable(value =
-			                                       "postid") int postId, @RequestBody Post newPost) {
+			                                       "postid") int postId,
+	                                       @RequestBody Post httpPost) {
 		
-		// Return if the post's id or thread id don't match the URL pattern
+		// Return if the post's id or thread id don't match the URL
+		Post newPost = new Post(httpPost.id, httpPost.body,httpPost.title,httpPost.author,
+				httpPost.threadId);
 		if (newPost.id != postId || newPost.threadId != threadId)
 			return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 			
@@ -74,7 +77,7 @@ public class PostController {
 	// For DELETE requests, removes the post at this url from the thread unless it's the first post
 	@ApiOperation(value = "Delete this post unless it is the first post in the thread.", tags = "API")
 	@ApiResponse(code = 200, message = "Success_OK.")
-	@RequestMapping(value = "/threadid-{threadid}/postid-{postid}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{threadid}/{postid}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deletePost(@PathVariable(value = "threadid") int threadId,
 	                                         @PathVariable(value =
 			                                         "postid") int postId) {

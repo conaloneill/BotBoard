@@ -39,11 +39,5 @@ public class MessageBoardApplication {
 		
 		return i;
 	}
-
-
-//	// Attach the resources to the router
-//        router.attach("/", MultipleThreadsResource.class); --- root
-//        router.attach("/{threadid}", ThreadResource.class); ---- full thread
-//        router.attach("/{threadid}/{postid}", PostResource.class); ---- individual post
 }
 

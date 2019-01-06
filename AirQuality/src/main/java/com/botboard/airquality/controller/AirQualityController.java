@@ -1,5 +1,7 @@
-package com.botboard.airquality;
+package com.botboard.airquality.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class AirQualityController {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	@ApiOperation(value = "Get the AirQuality based on the nearest city to your IP location",
+			tags = "AirQuality Bot")
+	@ApiResponse(code = 200, message = "Success_OK.")
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ResponseEntity<String> airQuality() throws JSONException {
 		

@@ -1,11 +1,2 @@
-.idea/
-BotBoard.iml
-/out
-
-META-INF/
-Rested HTTP Test.request
-src/META-INF/
-
-.classpath
-.project
-/bin/
+AirQuality/lib
+.idea
