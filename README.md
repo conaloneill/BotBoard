@@ -5,4 +5,4 @@
 17459182 - Nikolai Gladychev
 
 
-Java messageboard application built on Netflix's Eureka for Service Discovery, with Air Quality and Bitcoin Price bots. Full details on application [here](/BotBoardReport.pdf)
+Java Message Board application using Netflix's Eureka for service discovery of integrated AirQuality and Bitcoin bots, with Swagger for API documentation. Full details on application [here](/BotBoardReport.pdf)
